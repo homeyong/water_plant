@@ -1,0 +1,41 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",              // Specify ECMAScript target version (ES6+)
+      "module": "ESNext",              // Use modern ES module syntax
+      "moduleResolution": "node",      // Resolve modules using Node.js-style resolution
+      "lib": ["DOM", "ESNext"],        // Specify library files to be included
+      "allowJs": true,                 // Allow JavaScript files to be compiled
+      "checkJs": false,                // Disable reporting errors in .js files
+      "jsx": "preserve",               // Keep JSX as it is, useful for Vue JSX/TSX
+      "sourceMap": true,               // Generates corresponding '.map' file
+      "strict": true,                  // Enable all strict type-checking options
+      "noImplicitAny": true,           // Raise error on expressions and declarations with an implied 'any' type
+      "strictNullChecks": true,        // Enable strict null checks
+      "strictFunctionTypes": true,     // Enable strict checking of function types
+      "noUnusedLocals": true,          // Report errors on unused locals
+      "noUnusedParameters": true,      // Report errors on unused parameters
+      "noImplicitReturns": true,       // Report error when not all code paths in function return a value
+      "noFallthroughCasesInSwitch": true, // Report errors for fallthrough cases in switch statements
+      "esModuleInterop": true,         // Enable ES module interop
+      "skipLibCheck": true,            // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true, // Disallow inconsistently-cased references to the same file
+      "baseUrl": ".",                  // Base directory to resolve non-relative module names
+      "paths": {
+        "@/*": ["src/*"]               // Support path aliasing for '@' to 'src'
+      }
+    },
+    "include": [
+      "src/**/*.ts",
+      "src/**/*.d.ts",
+      "src/**/*.tsx",
+      "src/**/*.vue"
+    ],
+    "exclude": [
+      "node_modules",
+      "dist"
+    ],
+    "vueCompilerOptions": {
+      "experimentalCompatMode": 3      // Vue 3 specific: Compatibility mode for migration from Vue 2
+    }
+  }
+  
