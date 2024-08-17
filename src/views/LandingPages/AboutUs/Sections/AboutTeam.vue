@@ -28,20 +28,18 @@ import marquez from "@/assets/img/ivana-square.jpg";
           <HorizontalTeamCard
             class="mt-4"
             :image="emma"
-            :profile="{ name: 'Emma Roberts', link: 'javascript:;' }"
-            :position="{ label: 'UI Designer', color: 'success' }"
-            description="Artist is a term applied to a person who engages in an
-                    activity deemed to be an art."
+            :profile="{ name: 'Malcolm Tam', link: 'javascript:;' }"
+            :position="{ label: 'Smart Contract Dev', color: 'success' }"
+            description="Master of smart contract in EVM and SVM"
           />
         </div>
         <div class="col-lg-6 col-12">
           <HorizontalTeamCard
             class="mt-lg-4 mt-5"
             :image="william"
-            :profile="{ name: 'William Pearce', link: 'javascript:;' }"
+            :profile="{ name: 'Ser Liang', link: 'javascript:;' }"
             :position="{ label: 'Boss', color: 'success' }"
-            description="Artist is a term applied to a person who engages in an
-                    activity deemed to be an art."
+            description="Everything under control"
           />
         </div>
       </div>
