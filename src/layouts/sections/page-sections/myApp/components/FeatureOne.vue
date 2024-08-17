@@ -1,57 +1,133 @@
 <script setup>
 import ChatBox from "./chatbox.vue";
-// import { WalletProvider, useWallet } from '@solana/wallet-adapter-vue';
-// import { BackpackWalletAdapter } from '@solana/wallet-adapter-backpack';
+import { WalletProvider, useWallet } from '@solana/wallet-adapter-vue';
 import { computed, ref } from 'vue';
-import WalletModal from './walletmodal.vue';
+import { Buffer } from 'buffer'; // Import the buffer package
 
-// Reference to the modal element
-const walletModal = ref(null);
+// Import the necessary functions and libraries
+import { Connection, clusterApiUrl, Transaction, SystemProgram } from '@solana/web3.js';
 
-// Method to show the modal
-function showWalletModal() {
-  const modalElement = walletModal.value;
-  const modal = new bootstrap.Modal(modalElement);
-  modal.show();
-}
+// Ensure Buffer is available globally in the browser environment
+window.Buffer = Buffer;
+// Reactive variables to hold wallet state and address
+const walletConnected = ref(false);
+const walletAddress = ref(null);
 
-// Function to handle the connection when the "Connect" button is clicked
-function handleConnect() {
-  // Initialize the Backpack wallet adapter
-  const wallets = computed(() => [new BackpackWalletAdapter()]);
-
-  // Use the wallet functionality provided by the WalletProvider
-  const { wallet, connected, select } = useWallet();
-  if (!connected.value) {
-    select(wallets.value[0].name); // Select Backpack wallet
-    wallet.value.connect().catch((err) => {
-      console.error("Failed to connect to Backpack wallet:", err);
-    });
+// Function to connect the wallet
+const connectWallet = async () => {
+  if (window.backpack) {
+    try {
+      const response = await window.backpack.connect();
+      walletConnected.value = true;
+      walletAddress.value = response.publicKey.toString();
+    } catch (error) {
+      console.error('Wallet connection failed:', error);
+    }
+  } else {
+    alert('Phantom Wallet not installed');
   }
-}
+};
+
+// Function to disconnect the wallet
+const disconnectWallet = async () => {
+  if (window.backpack && walletConnected.value) {
+    try {
+      await window.backpack.disconnect();
+      walletConnected.value = false;
+      walletAddress.value = null;
+    } catch (error) {
+      console.error('Wallet disconnection failed:', error);
+    }
+  }
+};
+
+// Function to send a transaction
+const sendTransaction = async () => {
+  if (window.backpack && walletConnected.value) {
+    const customRpcUrl = 'https://testnet.dev2.eclipsenetwork.xyz';
+    const connection = new Connection(customRpcUrl);
+    const { publicKey } = window.backpack;
+
+    const transaction = new Transaction().add(
+      SystemProgram.transfer({
+        fromPubkey: publicKey,
+        toPubkey: 'DXra5MvE7yY8vmSv2dKMgNw5dvwf6mPJS9B3y1yTfMSD', // Replace with the recipient's public key
+        lamports: 1, // 1 SOL = 1,000,000 lamports
+      })
+    );
+
+    try {
+      const signature = await window.backpack.signAndSendTransaction(transaction);
+      await connection.confirmTransaction(signature);
+      console.log('Transaction successful:', signature);
+    } catch (error) {
+      console.error('Transaction failed:', error);
+    }
+  }
+};
+
+
+const callContractFunction = async () => {
+  if (window.backpack && walletConnected.value) {
+    const programId = new PublicKey('YourProgramIdHere'); // Replace with your program's public key
+    const fromPublicKey = new PublicKey(walletAddress.value);
+
+    // Create the instruction data buffer. This should be specific to the contract's expected data.
+    // For example, if the contract expects an instruction code followed by some arguments:
+    const instructionData = Buffer.from([0]); // Replace with the actual instruction data needed
+
+    // Define the accounts that the contract will interact with (these should be specific to your contract)
+    const instructionAccounts = [
+      {
+        pubkey: fromPublicKey,
+        isSigner: true,
+        isWritable: true,
+      },
+      // Add other accounts as required by your contract
+    ];
+
+    // Create the transaction instruction
+    const instruction = new TransactionInstruction({
+      keys: instructionAccounts,
+      programId,
+      data: instructionData,
+    });
+
+    // Create and send the transaction
+    const transaction = new Transaction().add(instruction);
+
+    try {
+      const signature = await window.solana.signAndSendTransaction(transaction);
+      await connection.confirmTransaction(signature);
+      console.log('Contract function called successfully:', signature);
+    } catch (error) {
+      console.error('Failed to call contract function:', error);
+    }
+  }
+};
+
+
 </script>
 
 <template>
-   <WalletModal ref="walletModal" />
 
   <section class="py-9">
     <div class="container">
       <div class="row justify-content-center">
         <!-- Connect Button -->
         <div class="col-md-12 text-center mb-4">
-          <button class="btn btn-success" @click="handleConnect">
-            {{ connected ? "Connected to Backpack Wallet" : "Connect" }}
-          </button>
-          <button class="btn btn-success" @click="showWalletModal">
+          <button class="btn btn-success" @click="connectWallet" v-if="!walletConnected">
             {{ connected ? "Connected to Backpack Wallet" : "Connect" }}
           </button>
         </div>
+        <button class="btn btn-warning" @click="disconnectWallet" v-if="walletConnected">Disconnect</button>
+        <p v-if="walletConnected">Connected: {{ walletAddress }}</p>
       </div>
       <!-- Ensure WalletProvider is wrapping the entire section that uses wallet functionality -->
       <WalletProvider :wallets="wallets">
         <div class="row justify-content-center">
           <!-- Other Buttons -->
-          <div class="col-md-4 text-center mb-4">
+          <div class="col-md-4 text-center mb-4" @click="sendTransaction">
             <button class="btn btn-primary">Music</button>
           </div>
           <div class="col-md-4 text-center mb-4">
