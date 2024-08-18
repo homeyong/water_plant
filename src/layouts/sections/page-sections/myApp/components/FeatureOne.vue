@@ -27,6 +27,7 @@ const connectWallet = async () => {
       const response = await window.backpack.connect();
       walletConnected.value = true;
       walletAddress.value = response.publicKey.toString();
+      getUserId(walletAddress.value);
     } catch (error) {
       console.error('Wallet connection failed:', error);
     }
@@ -86,8 +87,8 @@ const getBalance = async () => {
   }
 };
 
-const creatAccount = async () => {
-  const programId = new PublicKey('7ZXCB4Vx8yw4ceCYfuZQeZqiy9Qkve4rR4gJtfftRSNj'); // Replace with your program's public key
+const createAccount = async () => {
+  const programId = new PublicKey('G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX'); // Replace with your program's public key
   const fromPublicKey = new PublicKey(walletAddress.value);
   const accountDataSize = 40;
   const account = new Account();
@@ -132,23 +133,25 @@ const createAccount2 = async () => {
   if (window.backpack && walletConnected.value) {
     const account = new Account(); // Generate a new keypair for the account
     const idl = await fetch('http://localhost:5000/get-idl').then((response) => response.json());
-    const programId = new PublicKey('7ZXCB4Vx8yw4ceCYfuZQeZqiy9Qkve4rR4gJtfftRSNj'); // Replace with your program's public key
+    const programId = new PublicKey('G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX'); // Replace with your program's public key
     const provider = new anchor.AnchorProvider(connection, window.backpack, anchor.AnchorProvider.defaultOptions());
     anchor.setProvider(provider);
     const fromPublicKey = new PublicKey(walletAddress.value);
-    // // Derive the PDA using just the public key
-    // const [accountPda, _] = await PublicKey.findProgramAddress(
-    //   [fromPublicKey.toBase58()],
-    //   programId
-    // );
+    // Convert the public key to a Uint8Array to use it as a seed
+    const walletAddressBytes = fromPublicKey.toBuffer();
+    // Derive the PDA using just the public key
+    const [accountPda, _] = await PublicKey.findProgramAddress(
+      [walletAddressBytes],
+      programId
+    );
 
-    // // Debugging: Log the derived PDA
-    // console.log("Derived PDA:", accountPda.toBase58());
+    // Debugging: Log the derived PDA
+    console.log("Derived PDA:", accountPda.toBase58());
 
     // Check if the account exists
-    const accountInfo = await provider.connection.getAccountInfo(fromPublicKey);
+    // const accountInfo = await provider.connection.getAccountInfo(accountPda.toBase58());
 
-    if (accountInfo !== null) {
+    if (accountPda !== null) {
       console.log("Account exists for the given program ID.");
     } else {
       console.log("Account does not exist.");
@@ -188,7 +191,7 @@ const createAccount2 = async () => {
 const callContractFunction = async () => {
   if (window.backpack && walletConnected.value) {
 
-    const programId = new PublicKey('7ZXCB4Vx8yw4ceCYfuZQeZqiy9Qkve4rR4gJtfftRSNj'); // Replace with your program's public key
+    const programId = new PublicKey('G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX'); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
 
     // Create the instruction data buffer. This should be specific to the contract's expected data.
@@ -211,6 +214,7 @@ const callContractFunction = async () => {
       programId,
       data: instructionData,
     });
+
 
     // Create and send the transaction
     const transaction = new Transaction().add(instruction);
@@ -239,9 +243,9 @@ const callContractFunction = async () => {
 const callMoveRightFunction = async () => {
   if (window.backpack && walletConnected.value) {
     const idl = await fetch('http://localhost:5000/get-idl').then((response) => response.json());
-    const programId = new PublicKey('7ZXCB4Vx8yw4ceCYfuZQeZqiy9Qkve4rR4gJtfftRSNj'); // Replace with your program's public key
+    const programId = new PublicKey('G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX'); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
-
+    const toPublicKey = new PublicKey('4uR263PPjZn5ShfWvhWtAviPndx8T3bxWEVwXsb7vVrF');
 
     try {
       // Create an Anchor provider using window.backpack
@@ -255,8 +259,6 @@ const callMoveRightFunction = async () => {
       // Replace with your program ID
       const program = new anchor.Program(idl, programId, provider);
 
-      // Check if the account exists
-      const accountInfo = await provider.connection.getAccountInfo(fromPublicKey);
       // Derive the PDA for the game data account using the same seeds as the program
       const [gameDataAccountPDA, bump] = await PublicKey.findProgramAddress(
         [Buffer.from("level1", "utf8")],
@@ -294,21 +296,22 @@ const callMoveRightFunction = async () => {
       }
 
       // Send a transaction to initialize the game data account
-      await program.rpc.initialize({
-        accounts: {
-          newGameDataAccount: gameDataAccountPDA,
-          signer: provider.wallet.publicKey,
-          systemProgram: SystemProgram.programId,
-        }
-      });
+      // await program.rpc.initialize({
+      //   accounts: {
+      //     newGameDataAccount: gameDataAccountPDA,
+      //     signer: provider.wallet.publicKey,
+      //     systemProgram: SystemProgram.programId,
+      //   }
+      // });
 
       console.log("GameDataAccount has been initialized with public key:", gameDataAccountPDA.toString());
 
       // Call the moveRight function
       const txHash = await program.methods
-        .moveLeft()
+        .water()
         .accounts({
-          gameDataAccount: gameDataAccountPDA,
+          from: gameDataAccountPDA,
+          to: toPublicKey
         })
         .rpc();
 
@@ -318,6 +321,61 @@ const callMoveRightFunction = async () => {
     }
   }
 };
+
+
+const callFunction = async () => {
+  if (window.backpack && walletConnected.value) {
+    const idl = await fetch('http://localhost:5000/get-idl').then((response) => response.json());
+    const programId = new PublicKey('G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX'); // Replace with your program's public key
+    const fromPublicKey = new PublicKey(walletAddress.value);
+    const toPublicKey = new PublicKey('24gmPVxnHthq7Hhzip42aDXt9sUCRX9EyxFnRJGEPsCv');
+    
+    try {
+      // Create an Anchor provider using window.backpack
+      const provider = new anchor.AnchorProvider(
+        connection,
+        window.backpack,
+        anchor.AnchorProvider.defaultOptions()
+      );
+      anchor.setProvider(provider);
+
+      // Initialize the program
+      const program = new anchor.Program(idl, programId, provider);
+      // Create the transaction
+      const instruction = await program.methods
+        .water()
+        .accounts({
+          from: fromPublicKey,
+          to: toPublicKey,
+          systemProgram: anchor.web3.SystemProgram.programId
+        })
+        .instruction();
+
+      // Create a new transaction and add the instruction to it
+      const transaction = new anchor.web3.Transaction().add(instruction);
+
+      transaction.feePayer = fromPublicKey;
+
+      const { blockhash } = await connection.getRecentBlockhash();
+      transaction.recentBlockhash = blockhash;
+
+      // Partially sign the transaction with the connected wallet
+      const signedTransaction = await window.backpack.signTransaction(transaction);
+
+      // Send the transaction with the partial signature
+      const txHash = await connection.sendRawTransaction(signedTransaction.serialize());
+
+      console.log('Transaction hash:', txHash);
+    } catch (error) {
+      console.error('Error calling callFunction function:', error);
+    }
+  }
+};
+
+// Function to generate or retrieve a unique user ID
+function getUserId(storedId) {
+  localStorage.setItem('chatUserId', storedId);
+}
 
 const getTokens = async () => {
   if (walletConnected.value) {
@@ -355,30 +413,27 @@ const getTokens = async () => {
         </div>
         <button class="btn btn-warning" @click="disconnectWallet" v-if="walletConnected">Disconnect</button>
         <p v-if="walletConnected">Connected: {{ walletAddress }}</p>
-        <button @click="getTokens" v-if="walletConnected">Get My Tokens</button>
+        <!-- <button @click="getTokens" v-if="walletConnected">Get My Tokens</button> -->
 
-        <ul v-if="tokens.length > 0">
+        <!-- <ul v-if="tokens.length > 0">
           <li v-for="(token, index) in tokens" :key="index">
             {{ token.mint }}: {{ token.amount }}
           </li>
         </ul>
-        <h6>{{ balance }}</h6>
+        <h6>{{ balance }}</h6> -->
       </div>
       <!-- Ensure WalletProvider is wrapping the entire section that uses wallet functionality -->
       <WalletProvider :wallets="wallets">
         <div class="row justify-content-center">
           <!-- Other Buttons -->
-          <div class="col-md-4 text-center mb-4" @click="sendTransaction">
+          <div class="col-md-4 text-center mb-4" @click="createAccount2">
             <button class="btn btn-primary">Music</button>
           </div>
-          <div class="col-md-4 text-center mb-4" @click="getBalance">
+          <div class="col-md-4 text-center mb-4" @click="callFunction">
             <button class="btn btn-primary">Water</button>
           </div>
           <div class="col-md-4 text-center mb-4" @click="callMoveRightFunction">
             <button class="btn btn-primary">Light</button>
-          </div>
-          <div class="col-md-4 text-center mb-4" @click="createAccount2">
-            <button class="btn btn-primary">createAccount</button>
           </div>
         </div>
       </WalletProvider>

@@ -21,7 +21,7 @@ export default defineConfig({
       },
     }
   },
-
+  // base: '/your-sub-directory/',
   build: {
     rollupOptions: {
       plugins: [

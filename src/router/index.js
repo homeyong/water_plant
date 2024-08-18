@@ -26,7 +26,7 @@ import ElTypography from "../layouts/sections/elements/typography/TypographyView
 import myApp from "../layouts/sections/page-sections/myApp/FeaturesView.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
