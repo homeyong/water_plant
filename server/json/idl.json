@@ -1,0 +1,102 @@
+{
+    "version": "0.1.0",
+    "name": "plant",
+    "instructions": [
+        {
+            "name": "water",
+            "accounts": [
+                {
+                    "name": "from",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "to",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "light",
+            "accounts": [
+                {
+                    "name": "from",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "to",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "music",
+            "accounts": [
+                {
+                    "name": "from",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "to",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": []
+        },
+        {
+            "name": "transferTokens",
+            "accounts": [
+                {
+                    "name": "from",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "to",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "f64"
+                }
+            ]
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "TransferFailed",
+            "msg": "Transfer failed"
+        }
+    ]
+}

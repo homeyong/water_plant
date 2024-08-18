@@ -96,7 +96,7 @@ const callFunction = async (action) => {
   if (window.backpack && walletConnected.value) {
     successMessageBln.value = false;
     successMessage.value = '';
-    const idl = await fetch('http://localhost:5000/get-idl').then((response) => response.json());
+    const idl = await fetch('http://207.148.76.50:5000/get-idl').then((response) => response.json());
     const programId = new PublicKey(contractProgram); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
     const toPublicKey = new PublicKey(destinationAddress);

@@ -32,7 +32,7 @@ function scrollToBottom() {
 
 // Function to load chat messages from the server
 function loadMessages() {
-  fetch('http://localhost:5000/api/chat')
+  fetch('http://207.148.76.50:5000/api/chat')
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -60,7 +60,7 @@ function sendMessage() {
     scrollToBottom();
 
     // Send message to backend to store it in the text file
-    fetch('http://localhost:5000/api/chat', {
+    fetch('http://207.148.76.50:5000/api/chat', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

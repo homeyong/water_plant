@@ -1,0 +1,20 @@
+{
+  "name": "water-plant-backend",
+  "version": "1.0.0",
+  "description": "water plant backend",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "client": "yarn build",
+    "dev": "concurrently \"node server.js\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
