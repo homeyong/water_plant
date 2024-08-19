@@ -160,6 +160,52 @@ app.post('/updateAction', (req, res) => {
   });
 });
 
+app.get('/trigger-pump', async (req, res) => {
+  try {
+    const response = await fetch('http://100.85.115.44:3000', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'action=pump',
+    });
+
+    const data = await response.text();
+    res.send(`Pump action triggered: ${data}`);
+  } catch (error) {
+    console.error('Error triggering pump:', error);
+    res.status(500).send('Failed to trigger pump action');
+  }
+});
+
+app.get('/trigger-light', async (req, res) => {
+  try {
+    const response = await fetch('http://100.85.115.44:3000', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'action=light',
+    });
+
+    const data = await response.text();
+    res.send(`Pump action triggered: ${data}`);
+  } catch (error) {
+    console.error('Error triggering pump:', error);
+    res.status(500).send('Failed to trigger pump action');
+  }
+});
+
+app.get('/trigger-music', async (req, res) => {
+  try {
+   
+    res.send(`music action triggered: `);
+  } catch (error) {
+    console.error('Error triggering pump:', error);
+    res.status(500).send('Failed to trigger pump action');
+  }
+});
+
 // Serve static files from the Vue app's 'dist' directory
 
 

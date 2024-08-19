@@ -152,9 +152,23 @@ const callFunction = async (action) => {
       successMessage.value = action + ' successful run: ' + txHash;
       await updateAction(action);
       console.log('Transaction hash action ' + action + ':', txHash);
+
+      var response;
+      if (action === 'water') {
+        response = await axios.get('http://207.148.76.50:5000/trigger-pump');
+      } else if (action === 'music') {
+        response = await axios.get('http://207.148.76.50:5000/trigger-music');
+      } else if (action === 'light') {
+        response = await axios.get('http://207.148.76.50:5000/trigger-light');
+      } else {
+        throw new Error(`Invalid action: ${action}`);
+      }
+      
+      // this.message = `Light action triggered: ${response.data}`;
+
     } catch (error) {
-      successMessageBln.value = true;
-      successMessage.value = action + ' failed run: ' + error;
+      // successMessageBln.value = true;
+      // successMessage.value = action + ' failed run: ' + error;
       console.error('Error calling callFunction function ' + action + ':', error);
     }
   }

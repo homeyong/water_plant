@@ -109,11 +109,11 @@ watch(
       "
     >
       <RouterLink
-        class="navbar-brand d-none d-md-block"
         :class="[
           (props.transparent && textDark.value) || !props.transparent
             ? 'text-dark font-weight-bolder ms-sm-3'
-            : 'text-white font-weight-bolder ms-sm-3'
+            : 'text-white font-weight-bolder ms-sm-3',
+          'd-block' // Make sure it's visible on all screen sizes
         ]"
         :to="{ name: 'presentation' }"
         rel="tooltip"
