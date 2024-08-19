@@ -89,6 +89,77 @@ app.get('/api/chat', (req, res) => {
 });
 
 
+// Endpoint to return the contents of the JSON file
+app.get('/get-address', (req, res) => {
+  const filePath = path.join(__dirname, 'json/address.json'); // Adjust the path to your JSON file
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading the JSON file:', err);
+      return res.status(500).json({ error: 'Failed to read the JSON file' });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      res.json(jsonData);
+    } catch (parseErr) {
+      console.error('Error parsing the JSON file:', parseErr);
+      res.status(500).json({ error: 'Failed to parse the JSON file' });
+    }
+  });
+});
+
+
+
+app.post('/updateAction', (req, res) => {
+  const { address, action } = req.body;
+
+  if (!address || !action) {
+    return res.status(400).send('Address and action are required.');
+  }
+
+  const filePath = path.join(__dirname, 'json/address.json'); // Adjust the path to your JSON file
+
+  // Read the existing data from address.json
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      return res.status(500).send('Error reading file.');
+    }
+
+    let addressData = {};
+
+    // If the file is not empty, parse the data
+    if (data) {
+      addressData = JSON.parse(data);
+    }
+
+    // Check if the address exists in the file
+    if (!addressData[address]) {
+      // If not, create a new object for the address
+      addressData[address] = {
+        water: 0,
+        light: 0,
+        music: 0
+      };
+    }
+
+    // Increment the appropriate action count
+    if (addressData[address][action] !== undefined) {
+      addressData[address][action]++;
+    } else {
+      return res.status(400).send('Invalid action.');
+    }
+
+    // Write the updated data back to the file
+    fs.writeFile(filePath, JSON.stringify(addressData, null, 2), 'utf8', (err) => {
+      if (err) {
+        return res.status(500).send('Error writing file.');
+      }
+      res.status(200).send('Action updated successfully.');
+    });
+  });
+});
+
 // Serve static files from the Vue app's 'dist' directory
 
 
