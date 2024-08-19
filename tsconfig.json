@@ -26,7 +26,7 @@
     "paths": {
       "@/*": [
         "src/*"
-      ] // Support path aliasing for '@' to 'src'
+      ]
     },
     "outDir": "dist",
     "types": ["node", "vite/client"] // Add 'node' to this array

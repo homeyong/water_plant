@@ -34,6 +34,8 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "crypto": require.resolve("crypto-browserify"),
     },
+    fallback: { "crypto": require.resolve("crypto-browserify") }
   },
 });

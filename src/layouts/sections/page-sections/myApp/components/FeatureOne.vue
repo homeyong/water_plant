@@ -3,14 +3,14 @@ import ChatBox from "./chatbox.vue";
 import { WalletProvider, useWallet } from '@solana/wallet-adapter-vue';
 import { computed, ref } from 'vue';
 import { Buffer } from 'buffer';
-import * as anchor from '@project-serum/anchor';
-
-
+// Ensure Buffer is available globally in the browser environment
+window.Buffer = Buffer;
 // Import the necessary functions and libraries
 import { Connection, clusterApiUrl, Transaction, TransactionInstruction, SystemProgram, PublicKey, LAMPORTS_PER_SOL, Account } from '@solana/web3.js';
 
-// Ensure Buffer is available globally in the browser environment
-window.Buffer = Buffer;
+// window.process = process;
+// import { createInitializeMintInstruction, MINT_SIZE } from '@solana/spl-token';
+import * as anchor from '@project-serum/anchor';
 // Reactive variables to hold wallet state and address
 const walletConnected = ref(false);
 const walletAddress = ref(null);
@@ -149,14 +149,122 @@ const callFunction = async (action) => {
       const txHash = await connection.sendRawTransaction(signedTransaction.serialize());
       successMessageBln.value = true;
       successMessage.value = action + ' successful run: ' + txHash;
-      console.log('Transaction hash action '+ action +':', txHash);
+      console.log('Transaction hash action ' + action + ':', txHash);
     } catch (error) {
       successMessageBln.value = true;
       successMessage.value = action + ' failed run: ' + error;
-      console.error('Error calling callFunction function '+ action +':', error);
+      console.error('Error calling callFunction function ' + action + ':', error);
     }
   }
 };
+
+const regToken = async () => {
+  if (window.backpack && walletConnected.value) {
+    const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+    const METADATA_PROGRAM_ID = new PublicKey("metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s");
+    const fromPublicKey = new PublicKey(walletAddress.value);
+
+    // Generate a new keypair for the mint
+    const mintKeypair = anchor.web3.Keypair.generate();
+    console.log("Mint address:", mintKeypair.publicKey.toBase58());
+
+    // Token configuration
+    const tokenConfig = {
+      decimals: 2,
+      name: "HarvestBuddy",
+      symbol: "GOLD",
+      uri: "https://github.com/wwwMalcolm/testfileupload/blob/main/data1.json"
+    };
+
+    // Create the token mint account instruction
+    const lamports = await connection.getMinimumBalanceForRentExemption(82); // Fixed size for Mint
+    const createMintAccountInstruction = SystemProgram.createAccount({
+      fromPubkey: fromPublicKey,
+      newAccountPubkey: mintKeypair.publicKey,
+      space: 82,  // Size of a Mint account
+      lamports,
+      programId: TOKEN_PROGRAM_ID,
+    });
+
+    // Create the Mint initialization instruction manually
+    const initializeMintInstruction = new TransactionInstruction({
+      keys: [
+        { pubkey: mintKeypair.publicKey, isSigner: false, isWritable: true },
+        { pubkey: fromPublicKey, isSigner: true, isWritable: false },
+      ],
+      programId: TOKEN_PROGRAM_ID,
+      data: Buffer.from(Uint8Array.of(
+        0, // InitializeMint instruction index
+        tokenConfig.decimals,
+        ...fromPublicKey.toBuffer(), // Mint authority
+        0 // Freeze authority (set to null)
+      )),
+    });
+
+    // Derive PDA for Metadata account
+    const [metadataAccount] = PublicKey.findProgramAddressSync(
+      [Buffer.from("metadata"), METADATA_PROGRAM_ID.toBuffer(), mintKeypair.publicKey.toBuffer()],
+      METADATA_PROGRAM_ID
+    );
+    console.log("Metadata address:", metadataAccount.toBase58());
+
+    // Create Metadata account instruction manually
+    const metadataInstructionData = Buffer.from([
+      0, // Instruction index for CreateMetadataAccount
+      ...new Uint8Array(32).fill(0), // Placeholder for name, will adjust length below
+      ...new Uint8Array(10).fill(0), // Placeholder for symbol, will adjust length below
+      ...new Uint8Array(200).fill(0), // Placeholder for URI, will adjust length below
+      0, 0, 0, 0, // Seller Fee Basis Points
+      0, 0, // Is Mutable (boolean as a u8)
+    ]);
+
+    const encoder = new TextEncoder();
+    const nameBytes = encoder.encode(tokenConfig.name);
+    const symbolBytes = encoder.encode(tokenConfig.symbol);
+    const uriBytes = encoder.encode(tokenConfig.uri);
+
+    metadataInstructionData.set(nameBytes.slice(0, 32), 1);
+    metadataInstructionData.set(symbolBytes.slice(0, 10), 33);
+    metadataInstructionData.set(uriBytes.slice(0, 200), 43);
+
+    const createMetadataInstruction = new TransactionInstruction({
+      keys: [
+        { pubkey: metadataAccount, isSigner: false, isWritable: true },
+        { pubkey: mintKeypair.publicKey, isSigner: false, isWritable: false },
+        { pubkey: fromPublicKey, isSigner: true, isWritable: false },
+      ],
+      programId: METADATA_PROGRAM_ID,
+      data: metadataInstructionData,
+    });
+
+    // Create a new transaction and add the instruction to it
+    const transaction = new Transaction().add(
+      createMintAccountInstruction,
+      initializeMintInstruction,
+      createMetadataInstruction
+    );
+
+    const { blockhash } = await connection.getRecentBlockhash();
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = fromPublicKey;
+    // Sign the transaction with the new account's private key
+    transaction.partialSign(mintKeypair);
+
+    try {
+      // Send transaction
+      const signature = await window.backpack.signAndSendTransaction(transaction);
+      console.log("Transaction completed:", explorerURL({ txSignature: signature }));
+
+      // Save the mint public key locally
+      console.log("tokenMint:" + mintKeypair.publicKey);
+    } catch (error) {
+      console.error("Failed to send transaction:", error);
+      throw error;
+    }
+
+  }
+};
+
 
 // Function to generate or retrieve a unique user ID
 function getUserId(storedId) {
@@ -205,13 +313,16 @@ const getTokens = async () => {
       <WalletProvider :wallets="wallets">
         <div class="row justify-content-center">
           <!-- Other Buttons -->
-          <div class="col-md-4 text-center mb-4" @click="callFunction('water')">
+          <div class="col-md-3 text-center mb-4" @click="regToken">
+            <button class="btn btn-primary">Register</button>
+          </div>
+          <div class="col-md-3 text-center mb-4" @click="callFunction('water')">
             <button class="btn btn-primary">Water</button>
           </div>
-          <div class="col-md-4 text-center mb-4" @click="callFunction('light')">
+          <div class="col-md-3 text-center mb-4" @click="callFunction('light')">
             <button class="btn btn-primary">Light</button>
           </div>
-          <div class="col-md-4 text-center mb-4" @click="callFunction('music')">
+          <div class="col-md-3 text-center mb-4" @click="callFunction('music')">
             <button class="btn btn-primary">Music</button>
           </div>
         </div>

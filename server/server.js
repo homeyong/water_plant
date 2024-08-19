@@ -48,6 +48,26 @@ app.get('/get-idl', (req, res) => {
   });
 });
 
+// Endpoint to return the contents of the JSON file
+app.get('/get-token', (req, res) => {
+  const filePath = path.join(__dirname, 'json/tokendata.json'); // Adjust the path to your JSON file
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Error reading the JSON file:', err);
+      return res.status(500).json({ error: 'Failed to read the JSON file' });
+    }
+
+    try {
+      const jsonData = JSON.parse(data);
+      res.json(jsonData);
+    } catch (parseErr) {
+      console.error('Error parsing the JSON file:', parseErr);
+      res.status(500).json({ error: 'Failed to parse the JSON file' });
+    }
+  });
+});
+
 // Endpoint to retrieve chat messages
 app.get('/api/chat', (req, res) => {
   const filePath = path.join(__dirname, 'chat_logs', `${new Date().toISOString().split('T')[0]}.txt`);
