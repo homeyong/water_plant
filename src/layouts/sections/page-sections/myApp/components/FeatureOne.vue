@@ -1,7 +1,7 @@
 <script setup>
 import ChatBox from "./chatbox.vue";
 import { WalletProvider, useWallet } from '@solana/wallet-adapter-vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { Buffer } from 'buffer';
 import axios from 'axios';
 // Ensure Buffer is available globally in the browser environment
@@ -12,6 +12,7 @@ import { Connection, clusterApiUrl, Transaction, TransactionInstruction, SystemP
 // window.process = process;
 // import { createInitializeMintInstruction, MINT_SIZE } from '@solana/spl-token';
 import * as anchor from '@project-serum/anchor';
+
 // Reactive variables to hold wallet state and address
 const walletConnected = ref(false);
 const walletAddress = ref(null);
@@ -24,6 +25,48 @@ const contractProgram = 'G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX';
 const destinationAddress = '24gmPVxnHthq7Hhzip42aDXt9sUCRX9EyxFnRJGEPsCv';
 var successMessage = ref('');
 var successMessageBln = ref(false);
+var isAllEnabled = ref(false);
+
+// var player = ref(null);
+
+// // youtube
+// function playVideo() {
+//   if (player) {
+//     player.playVideo();
+//   }
+// }
+
+// function pauseVideo() {
+//   if (player) {
+//     player.pauseVideo();
+//   }
+// }
+
+// function onYouTubeIframeAPIReady() {
+//   player = new YT.Player('youtube-player', {
+//     height: '390',
+//     width: '640',
+//     videoId: 'FqJDeEav-bs',
+//     events: {
+//       onReady: onPlayerReady,
+//     },
+//   });
+// }
+function onPlayerReady(event) {
+  // Optionally, autoplay the video when the player is ready
+  event.target.playVideo();
+}
+
+
+// onMounted(() => {
+//   // Check if the YouTube Iframe API is already loaded
+//   if (window.YT && window.YT.Player) {
+//     onYouTubeIframeAPIReady();
+//   } else {
+//     // If not, set up the callback when the API is ready
+//     window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady();
+//   }
+// });
 
 // Function to connect the wallet
 const connectWallet = async () => {
@@ -33,6 +76,7 @@ const connectWallet = async () => {
       walletConnected.value = true;
       walletAddress.value = response.publicKey.toString();
       getUserId(walletAddress.value);
+      isAllEnabled = true;
     } catch (error) {
       console.error('Wallet connection failed:', error);
     }
@@ -48,6 +92,7 @@ const disconnectWallet = async () => {
       await window.backpack.disconnect();
       walletConnected.value = false;
       walletAddress.value = null;
+      isAllEnabled = false;
     } catch (error) {
       console.error('Wallet disconnection failed:', error);
     }
@@ -97,6 +142,7 @@ const callFunction = async (action) => {
   if (window.backpack && walletConnected.value) {
     successMessageBln.value = false;
     successMessage.value = '';
+    isAllEnabled = false
     const idl = await fetch('http://207.148.76.50:5000/get-idl').then((response) => response.json());
     const programId = new PublicKey(contractProgram); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
@@ -151,6 +197,7 @@ const callFunction = async (action) => {
       successMessageBln.value = true;
       successMessage.value = action + ' successful run: ' + txHash;
       await updateAction(action);
+      isAllEnabled = true;
       console.log('Transaction hash action ' + action + ':', txHash);
 
       var response;
@@ -163,12 +210,13 @@ const callFunction = async (action) => {
       } else {
         throw new Error(`Invalid action: ${action}`);
       }
-      
+
       // this.message = `Light action triggered: ${response.data}`;
 
     } catch (error) {
       // successMessageBln.value = true;
       // successMessage.value = action + ' failed run: ' + error;
+      isAllEnabled = true;
       console.error('Error calling callFunction function ' + action + ':', error);
     }
   }
@@ -216,7 +264,6 @@ const getTokens = async () => {
 </script>
 
 <template>
-
   <section class="py-9">
     <div class="container">
       <div class="row justify-content-center">
@@ -260,6 +307,16 @@ const getTokens = async () => {
           <ChatBox />
         </div>
       </div>
+
+      <!-- <div class="row justify-content-center mt-5">
+        <div>
+          <div id="youtube-player"></div>
+          <button @click="playVideo">Play</button>
+          <button @click="pauseVideo">Pause</button>
+        </div>
+      </div> -->
+
+
     </div>
   </section>
 

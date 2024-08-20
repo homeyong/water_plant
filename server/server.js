@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const cors = require('cors');
+const { exec } = require('child_process');
 
 
 app.use(cors());
@@ -198,11 +199,19 @@ app.get('/trigger-light', async (req, res) => {
 
 app.get('/trigger-music', async (req, res) => {
   try {
-   
-    res.send(`music action triggered: `);
+    const response = await fetch('http://100.85.115.44:3000', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'action=water',
+    });
+
+    const data = await response.text();
+    res.send(`water action triggered: ${data}`);
   } catch (error) {
-    console.error('Error triggering pump:', error);
-    res.status(500).send('Failed to trigger pump action');
+    console.error('Error triggering water:', error);
+    res.status(500).send('Failed to trigger water action');
   }
 });
 
