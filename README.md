@@ -9,7 +9,7 @@ Harvert Buddy https://harvestbuddy.site/
 Plant and watch your investments bloom!
 
 ## 👌 User-Friendly
-As easy as watering a plant.
+As easy as clicking a button.
 
 ## 💰 Consistent High Returns
 Enjoy 1000% APR from real business, not marketing budgets or VC funds!
@@ -18,7 +18,11 @@ Enjoy 1000% APR from real business, not marketing budgets or VC funds!
 Harvest your profits every week.
 
 ## 🌱 Contracts (on-chain)
+**Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy project.
+- The below section highlights all of the items that are deployed on chain. 
+
 Actions Contract: https://explorer.eclipse.xyz/address/G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX?cluster=testnet
+
 Transfer Tokens Program: BgWHnuRrUERTNiWvxjkC8z4rLgLQ6CCNFTeS3hpW7XSy
 
 Token information: 7936jetL3VRqaCZH9ct1pQ7fqfD8V1cZH1fSt2Wg3wHU
@@ -30,9 +34,6 @@ https://explorer.eclipse.xyz/address/4UoKd6duvyFgg8QJo3MaCmcGk9DYJJsY4a8XEhofx9H
 Sample transfer tx between my token account and a vault account (sample random account): 63eMkDiYHpVNmrQDiCaKLohsiexumvtZEZJEs6JjfZrCNAWD9GYF1UZASySxXfGz6G8GK5pVAqNg9gSEBfihe2RD
 https://explorer.eclipse.xyz/tx/63eMkDiYHpVNmrQDiCaKLohsiexumvtZEZJEs6JjfZrCNAWD9GYF1UZASySxXfGz6G8GK5pVAqNg9gSEBfihe2RD?cluster=testnet
 
-### Contracts (Live)
-**Purpose:** Contains the deployed live contracts.  
-**Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy ecosystem.
 
 ## 📁 Project Structure
 
@@ -55,3 +56,17 @@ The repository is organized as follows:
 **Description:** Includes all the client-side code responsible for creating the user interface and managing interactions with users and the backend.
 
 Feel free to explore the repository and contribute to making HarvestBuddy even better!
+
+## How to deploy (onchain)
+1. Open the following link: https://beta.solpg.io/
+2. Add a new Project and select Anchor (Rust)
+3. Make sure the RPC is set to custom and use the Eclipse Devnet RPC. This can be configured at the gear icon found in the bottom left. (maybe can add screenshot)
+4. Copy the contents of transfer.rs into lib.rs 
+    - This can be found under src -> lib.rs
+        - Clear out the contents in 6th line to look something like declare_id!("")
+5. Copy the contents of transfer.ts into client.ts
+    - This can be found under client -> client.ts
+6. Run the command "build" found in the Solana Playground's console
+7. Run the "deploy" command in Solana Playground's console
+
+Note: Ensure your account has some ETH Balance.
