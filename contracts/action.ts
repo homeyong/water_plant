@@ -19,7 +19,7 @@ try {
     .rpc();
 
   await logTransaction(txHash);
-  console.log("Watering the plant with 0.123 SOL...");
+  console.log("Watering the plant with 0.001 ETH...");
 } catch (err) {
   console.error("Failed to water the plant:", err);
 }
