@@ -4,6 +4,7 @@ Welcome to the HarvestBuddy project! This platform is designed to help you grow 
 
 ## 🌿 Demo Site
 Harvert Buddy https://harvestbuddy.site/
+X: https://x.com/harvestbuddy1
 
 ## 🌿 Real Growth
 Plant and watch your investments bloom!
