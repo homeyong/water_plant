@@ -195,6 +195,8 @@ const callFunction = async (action) => {
       await updateAction(action);
       isAllEnabled = true;
       console.log('Transaction hash action ' + action + ':', txHash);
+      successMessageBln.value = true;
+      successMessage.value = action + ' successful run: ' + txHash;
 
       var response;
       if (action === 'water') {
@@ -206,10 +208,6 @@ const callFunction = async (action) => {
       } else {
         throw new Error(`Invalid action: ${action}`);
       }
-
-      successMessageBln.value = true;
-      successMessage.value = action + ' successful run: ' + txHash;
-
       // this.message = `Light action triggered: ${response.data}`;
 
     } catch (error) {
