@@ -79,7 +79,7 @@ const connectWallet = async () => {
       console.error('Wallet connection failed:', error);
     }
   } else {
-    alert('Phantom Wallet not installed');
+    alert('Backpack Wallet not installed');
   }
 };
 
