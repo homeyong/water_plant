@@ -17,8 +17,22 @@ Enjoy 1000% APR from real business, not marketing budgets or VC funds!
 ## 💸 Flexible Liquidity
 Harvest your profits every week.
 
-## 💵 Stables-Based Returns
-No governance, no staking, no vesting—just straightforward, cold-hard cash.
+## 🌱 Contracts (on-chain)
+Actions Contract: https://explorer.eclipse.xyz/address/G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX?cluster=testnet
+Transfer Tokens Program: BgWHnuRrUERTNiWvxjkC8z4rLgLQ6CCNFTeS3hpW7XSy
+
+Token information: 7936jetL3VRqaCZH9ct1pQ7fqfD8V1cZH1fSt2Wg3wHU
+https://explorer.eclipse.xyz/address/7936jetL3VRqaCZH9ct1pQ7fqfD8V1cZH1fSt2Wg3wHU?cluster=testnet
+
+My sample token account holding some of the tokens: 4UoKd6duvyFgg8QJo3MaCmcGk9DYJJsY4a8XEhofx9H8
+https://explorer.eclipse.xyz/address/4UoKd6duvyFgg8QJo3MaCmcGk9DYJJsY4a8XEhofx9H8?cluster=testnet
+
+Sample transfer tx between my token account and a vault account (sample random account): 63eMkDiYHpVNmrQDiCaKLohsiexumvtZEZJEs6JjfZrCNAWD9GYF1UZASySxXfGz6G8GK5pVAqNg9gSEBfihe2RD
+https://explorer.eclipse.xyz/tx/63eMkDiYHpVNmrQDiCaKLohsiexumvtZEZJEs6JjfZrCNAWD9GYF1UZASySxXfGz6G8GK5pVAqNg9gSEBfihe2RD?cluster=testnet
+
+### Contracts (Live)
+**Purpose:** Contains the deployed live contracts.  
+**Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy ecosystem.
 
 ## 📁 Project Structure
 
