@@ -1,0 +1,14 @@
+(node:3892) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Failed to read messages from file: [Error: ENOENT: no such file or directory, open 'C:\inetpub\node_backend\chat_logs\2024-08-20.txt'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\inetpub\\node_backend\\chat_logs\\2024-08-20.txt'
+}
+Failed to read messages from file: [Error: ENOENT: no such file or directory, open 'C:\inetpub\node_backend\chat_logs\2024-08-20.txt'] {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\inetpub\\node_backend\\chat_logs\\2024-08-20.txt'
+}
