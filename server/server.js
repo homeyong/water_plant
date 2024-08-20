@@ -204,7 +204,7 @@ app.get('/trigger-music', async (req, res) => {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: 'action=water',
+      body: 'action=music',
     });
 
     const data = await response.text();

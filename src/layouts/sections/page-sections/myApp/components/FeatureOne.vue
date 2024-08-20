@@ -58,15 +58,13 @@ function onPlayerReady(event) {
 }
 
 
-// onMounted(() => {
-//   // Check if the YouTube Iframe API is already loaded
-//   if (window.YT && window.YT.Player) {
-//     onYouTubeIframeAPIReady();
-//   } else {
-//     // If not, set up the callback when the API is ready
-//     window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady();
-//   }
-// });
+onMounted(() => {
+  new Twitch.Player("twitch-embed", {
+    channel: "kennyyong1",
+    width: "100%",
+    height: "500px"
+  });
+});
 
 // Function to connect the wallet
 const connectWallet = async () => {
@@ -143,7 +141,7 @@ const callFunction = async (action) => {
     successMessageBln.value = false;
     successMessage.value = '';
     isAllEnabled = false
-    const idl = await fetch('http://207.148.76.50:5000/get-idl').then((response) => response.json());
+    const idl = await fetch('https://harvestbuddy.site:5000/get-idl').then((response) => response.json());
     const programId = new PublicKey(contractProgram); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
     const toPublicKey = new PublicKey(destinationAddress);
@@ -194,22 +192,23 @@ const callFunction = async (action) => {
 
       // Send the transaction with the partial signature
       const txHash = await connection.sendRawTransaction(signedTransaction.serialize());
-      successMessageBln.value = true;
-      successMessage.value = action + ' successful run: ' + txHash;
       await updateAction(action);
       isAllEnabled = true;
       console.log('Transaction hash action ' + action + ':', txHash);
 
       var response;
       if (action === 'water') {
-        response = await axios.get('http://207.148.76.50:5000/trigger-pump');
+        response = await axios.get('https://harvestbuddy.site:5000/trigger-pump');
       } else if (action === 'music') {
-        response = await axios.get('http://207.148.76.50:5000/trigger-music');
+        response = await axios.get('https://harvestbuddy.site:5000/trigger-music');
       } else if (action === 'light') {
-        response = await axios.get('http://207.148.76.50:5000/trigger-light');
+        response = await axios.get('https://harvestbuddy.site:5000/trigger-light');
       } else {
         throw new Error(`Invalid action: ${action}`);
       }
+
+      successMessageBln.value = true;
+      successMessage.value = action + ' successful run: ' + txHash;
 
       // this.message = `Light action triggered: ${response.data}`;
 
@@ -224,7 +223,7 @@ const callFunction = async (action) => {
 
 const updateAction = async (action) => {
   try {
-    const response = await axios.post('http://207.148.76.50:5000/updateAction', {
+    const response = await axios.post('https://harvestbuddy.site:5000/updateAction', {
       address: walletAddress.value,
       action: action
     });
@@ -261,6 +260,7 @@ const getTokens = async () => {
   }
 };
 
+
 </script>
 
 <template>
@@ -295,12 +295,19 @@ const getTokens = async () => {
       <div class="row justify-content-center mt-5">
         <!-- Embedded YouTube Live Video with Chat -->
         <div class="col-md-8">
-          <div class="embed-responsive embed-responsive-16by9">
+          <!-- <div class="embed-responsive embed-responsive-16by9">
             <iframe width="100%" height="500" src="https://www.youtube.com/embed/2sjlviZZB94?autoplay=1"
               title="YouTube live stream player" frameborder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen></iframe>
-          </div>
+          </div> -->
+          <!-- <iframe src="https://player.twitch.tv/?channel=kennyyong1&parent=www.example.com" frameborder="0"
+            allowfullscreen="true" scrolling="no" height="500" width="100%"></iframe> -->
+          <!-- Add a placeholder for the Twitch embed -->
+          <div id="twitch-embed"></div>
+          <!-- <iframe src="https://player.twitch.tv/?channel=kennyyong1&parent=harvestbuddy.site/myapp" frameborder="0" allowfullscreen="true" scrolling="no" height="500" width="100%"></iframe> -->
+          <!-- Create a Twitch.Player object. This will render within the placeholder div -->
+
         </div>
         <!-- Live Chat -->
         <div class="col-md-4">
