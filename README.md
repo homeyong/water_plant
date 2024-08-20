@@ -2,6 +2,9 @@
 
 Welcome to the HarvestBuddy project! This platform is designed to help you grow your investments effortlessly, just like watering a plant. Here's a quick overview of what HarvestBuddy offers:
 
+## 🌿 Demo Site
+Harvert Buddy https://harvestbuddy.site/
+
 ## 🌿 Real Growth
 Plant and watch your investments bloom!
 
