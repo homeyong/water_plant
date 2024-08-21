@@ -32,7 +32,7 @@ Second program for facilitating NFT token transfer is on <ins>**testnet**.</ins>
 - The below section highlights all of the items that are deployed on chain. 
 
 Mainnet Contract:
-Actions Contract: https://explorer.eclipse.xyz/address/AQoWM8YdzxCsbnxC81R7yYNFrVGyKXWFcRvQrLVJPwML?cluster=mainnet
+Actions Contract: https://solscan.io/account/AQoWM8YdzxCsbnxC81R7yYNFrVGyKXWFcRvQrLVJPwML?cluster=custom&customUrl=https://mainnetbeta-rpc.eclipse.xyz
 
 Testnet NFT contract:
 Transfer Tokens Program: BgWHnuRrUERTNiWvxjkC8z4rLgLQ6CCNFTeS3hpW7XSy
