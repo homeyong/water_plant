@@ -75,3 +75,6 @@ Feel free to explore the repository and contribute to making HarvestBuddy even b
 7. Run the "deploy" command in Solana Playground's console
 
 Note: Ensure your account has some ETH Balance.
+
+## Technical Info
+Our application leverages a Vue.js-based frontend coupled with a Node.js backend to create a robust, full-stack environment. The deployment is managed on a cloud infrastructure, where we have implemented SSL/TLS encryption to secure data transmission, ensuring compliance with industry standards for security and privacy.
