@@ -22,9 +22,13 @@ Harvest your profits every week.
 **Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy project.
 - The below section highlights all of the items that are deployed on chain. 
 
-Actions Contract: https://explorer.eclipse.xyz/address/G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX?cluster=testnet
+Mainnet Contract:
+Actions Contract: https://explorer.eclipse.xyz/address/AQoWM8YdzxCsbnxC81R7yYNFrVGyKXWFcRvQrLVJPwML?cluster=mainnet
 
+Testnet NFT contract:
 Transfer Tokens Program: BgWHnuRrUERTNiWvxjkC8z4rLgLQ6CCNFTeS3hpW7XSy
+
+![alt text](image.png)
 
 Token information: 7936jetL3VRqaCZH9ct1pQ7fqfD8V1cZH1fSt2Wg3wHU
 https://explorer.eclipse.xyz/address/7936jetL3VRqaCZH9ct1pQ7fqfD8V1cZH1fSt2Wg3wHU?cluster=testnet
