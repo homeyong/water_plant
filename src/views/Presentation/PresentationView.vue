@@ -97,7 +97,7 @@ onUnmounted(() => {
         <div class="row">
           <div class="col-lg-5 ms-auto">
             <h4 class="mb-1">Thank you for your support!</h4>
-            <p class="lead mb-0">We deliver the best web products</p>
+            <p class="lead mb-0">Let''s plant some green and harvest those sweet yieldz!</p>
           </div>
           <div class="col-lg-5 me-lg-auto my-lg-auto text-lg-end mt-5">
             <MaterialSocialButton

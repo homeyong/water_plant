@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, onBeforeMount, nextTick } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 
 const messages = ref([]);
@@ -19,7 +19,7 @@ function getUserId() {
 // Function to format the userId for display
 function formatUserId(id) {
   if (id.length < 4) return id;
-  return `${id.slice(0, 2)}-${id.slice(-2)}`;
+  return `${id.slice(0, 3)}...${id.slice(-3)}`;
 }
 
 // Function to scroll to the bottom of the chat box
@@ -74,8 +74,11 @@ function sendMessage() {
 
 // Load messages and get user ID when the component is mounted
 onMounted(() => {
-  getUserId();
   loadMessages();
+});
+
+onBeforeMount(() => {
+  getUserId();
 });
 </script>
 
@@ -85,23 +88,17 @@ onMounted(() => {
       <h4 class="card-title">Live Chat</h4>
     </div>
     <div class="card-body chat-box">
-      <div 
-        v-for="message in messages" 
-        :key="message.timestamp + message.content" 
-        class="chat-message"
-        :class="{ 'own-message': message.userId === userId.value, 'other-message': message.userId !== userId.value }"
-      >
-        <strong>{{ formatUserId(message.userId) }} - {{ message.timestamp }}:</strong> {{ message.content }}
+      <div v-for="message in messages" :key="message.timestamp + message.content" class="chat-message"
+        :class="{ 'own-message': message.userId === userId.value, 'other-message': message.userId !== userId.value }">
+        <a :href="`https://solscan.io/account/${message.userId}?cluster=custom&customUrl=https://mainnetbeta-rpc.eclipse.xyz`" target='_blank'>
+          <strong>{{ formatUserId(message.userId) }} - {{ message.timestamp }}:</strong>
+        </a>
+        {{ message.content }}
       </div>
     </div>
     <div class="card-footer">
       <div class="input-group">
-        <input 
-          v-model="newMessage" 
-          @keyup.enter="sendMessage" 
-          class="form-control" 
-          placeholder="Type a message..."
-        />
+        <input v-model="newMessage" @keyup.enter="sendMessage" class="form-control" placeholder="Type a message..." />
         <div class="input-group-append">
           <button class="btn btn-primary" @click="sendMessage">Send</button>
         </div>
@@ -118,6 +115,7 @@ onMounted(() => {
   border: 1px solid #ddd;
   background-color: #f8f9fa;
 }
+
 .chat-message {
   margin-bottom: 10px;
   padding: 10px;
@@ -125,16 +123,19 @@ onMounted(() => {
   max-width: 70%;
   word-wrap: break-word;
 }
+
 .own-message {
   background-color: #e3f2fd;
   margin-left: auto;
   text-align: right;
 }
+
 .other-message {
   background-color: #f1f1f1;
   margin-right: auto;
   text-align: left;
 }
+
 .card-footer {
   padding-top: 10px;
   border-top: 1px solid #ddd;

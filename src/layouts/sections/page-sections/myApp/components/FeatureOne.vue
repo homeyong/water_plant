@@ -17,12 +17,14 @@ import * as anchor from '@project-serum/anchor';
 const walletConnected = ref(false);
 const walletAddress = ref(null);
 const tokens = ref([]);
-const customRpcUrl = 'https://testnet.dev2.eclipsenetwork.xyz';
+const customRpcUrl = 'https://mainnetbeta-rpc.eclipse.xyz';
+const contractProgram = 'AQoWM8YdzxCsbnxC81R7yYNFrVGyKXWFcRvQrLVJPwML';
+// const customRpcUrl = 'https://testnet.dev2.eclipsenetwork.xyz';
+// const contractProgram = 'G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX';
+const destinationAddress = '24gmPVxnHthq7Hhzip42aDXt9sUCRX9EyxFnRJGEPsCv';
 const connection = new Connection(customRpcUrl);
 const balance = ref(0);
 var publicKey = ref(null);
-const contractProgram = 'G4d3prSana24Zq5uGcDRWCJXKgxCYF5b7dqVSSHcnudX';
-const destinationAddress = '24gmPVxnHthq7Hhzip42aDXt9sUCRX9EyxFnRJGEPsCv';
 var successMessage = ref('');
 var successMessageBln = ref(false);
 var isAllEnabled = ref(false);
@@ -64,7 +66,20 @@ onMounted(() => {
     width: "100%",
     height: "500px"
   });
+
+  disableButton();
 });
+
+// function to disable the button
+function disableButton() {
+  const waterbtn = document.getElementById("waterbtn"); // assuming the button is assigned an id named "button"
+  const lightbtn = document.getElementById("lightbtn"); // assuming the button is assigned an id named "button"
+  const musicbtn = document.getElementById("musicbtn"); // assuming the button is assigned an id named "button"
+
+  waterbtn.disabled = !isAllEnabled.value;
+  lightbtn.disabled = !isAllEnabled.value;
+  musicbtn.disabled = !isAllEnabled.value;
+};
 
 // Function to connect the wallet
 const connectWallet = async () => {
@@ -74,7 +89,8 @@ const connectWallet = async () => {
       walletConnected.value = true;
       walletAddress.value = response.publicKey.toString();
       getUserId(walletAddress.value);
-      isAllEnabled = true;
+      isAllEnabled.value = true;
+      disableButton();
     } catch (error) {
       console.error('Wallet connection failed:', error);
     }
@@ -90,7 +106,8 @@ const disconnectWallet = async () => {
       await window.backpack.disconnect();
       walletConnected.value = false;
       walletAddress.value = null;
-      isAllEnabled = false;
+      isAllEnabled.value = false;
+      disableButton();
     } catch (error) {
       console.error('Wallet disconnection failed:', error);
     }
@@ -140,7 +157,8 @@ const callFunction = async (action) => {
   if (window.backpack && walletConnected.value) {
     successMessageBln.value = false;
     successMessage.value = '';
-    isAllEnabled = false
+    isAllEnabled.value = false;
+    disableButton();
     const idl = await fetch('https://harvestbuddy.site:5000/get-idl').then((response) => response.json());
     const programId = new PublicKey(contractProgram); // Replace with your program's public key
     const fromPublicKey = new PublicKey(walletAddress.value);
@@ -193,27 +211,32 @@ const callFunction = async (action) => {
       // Send the transaction with the partial signature
       const txHash = await connection.sendRawTransaction(signedTransaction.serialize());
       await updateAction(action);
-      isAllEnabled = true;
+      isAllEnabled.value = true;
+      disableButton();
       console.log('Transaction hash action ' + action + ':', txHash);
       successMessageBln.value = true;
-      successMessage.value = action + ' successful run: ' + txHash;
+
+      var tempHash = '`<a target="_blank" href="https://solscan.io/tx/' + txHash + '?cluster=custom&customUrl=https://mainnetbeta-rpc.eclipse.xyz"><strong>{ '+ txHash +' }</strong></a >`'
 
       var response;
       if (action === 'water') {
+        successMessage.value = "Hydration boost! Pumping water! Transaction: " + tempHash;
         response = await axios.get('https://harvestbuddy.site:5000/trigger-pump');
       } else if (action === 'music') {
+        successMessage.value = "Tunes on! 🎶 Your plant's vibing to some music! Transaction: " + tempHash;
         response = await axios.get('https://harvestbuddy.site:5000/trigger-music');
       } else if (action === 'light') {
+        successMessage.value = "Light on! Your plant’s getting a 10-minute glow! Transaction: " + tempHash;
         response = await axios.get('https://harvestbuddy.site:5000/trigger-light');
       } else {
-        throw new Error(`Invalid action: ${action}`);
+        throw new Error(`Invalid action: ${action} `);
       }
-      // this.message = `Light action triggered: ${response.data}`;
+      // this.message = `Light action triggered: ${ response.data } `;
 
     } catch (error) {
       // successMessageBln.value = true;
       // successMessage.value = action + ' failed run: ' + error;
-      isAllEnabled = true;
+      isAllEnabled.value = true;
       console.error('Error calling callFunction function ' + action + ':', error);
     }
   }
@@ -258,7 +281,6 @@ const getTokens = async () => {
   }
 };
 
-
 </script>
 
 <template>
@@ -273,20 +295,20 @@ const getTokens = async () => {
         </div>
         <button class="btn btn-warning" @click="disconnectWallet" v-if="walletConnected">Disconnect</button>
         <p v-if="walletConnected">Connected: {{ walletAddress }}</p>
-        <p class="success-message" v-if="successMessageBln">{{ successMessage }}</p>
+        <p class="success-message" v-html="successMessage" v-if="successMessageBln"></p>
       </div>
       <!-- Ensure WalletProvider is wrapping the entire section that uses wallet functionality -->
       <WalletProvider :wallets="wallets">
         <div class="row justify-content-center">
           <!-- Other Buttons -->
           <div class="col-md-3 text-center mb-4" @click="callFunction('water')">
-            <button class="btn btn-primary">Water</button>
+            <button class="btn btn-primary" id="waterbtn">Water</button>
           </div>
           <div class="col-md-3 text-center mb-4" @click="callFunction('light')">
-            <button class="btn btn-primary">Light</button>
+            <button class="btn btn-primary" id="lightbtn">Light</button>
           </div>
           <div class="col-md-3 text-center mb-4" @click="callFunction('music')">
-            <button class="btn btn-primary">Music</button>
+            <button class="btn btn-primary" id="musicbtn">Music</button>
           </div>
         </div>
       </WalletProvider>
