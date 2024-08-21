@@ -25,6 +25,8 @@ There are two program, one is deployed on **mainnet** which is the Actions contr
 
 Second program for facilitating NFT token transfer is on **testnet**.
 
+---
+
 **Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy project.
 - The below section highlights all of the items that are deployed on chain. 
 
