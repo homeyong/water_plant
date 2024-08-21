@@ -19,8 +19,10 @@ Enjoy 1000% APR from real business, not marketing budgets or VC funds!
 Harvest your profits every week.
 
 ## 🌱 Contracts (on-chain)
-***IMPORTANT NOTE***
+   ***IMPORTANT NOTE***
+
 There are two program, one is deployed on **mainnet** which is the Actions contract responsible for water, light, music
+
 Second program for facilitating NFT token transfer is on **testnet**.
 
 **Description:** This section provides the addresses and details of the smart contracts currently live on the blockchain, enabling real-time interactions with the HarvestBuddy project.
