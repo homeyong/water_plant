@@ -21,9 +21,9 @@ Harvest your profits every week.
 ## 🌱 Contracts (on-chain)
    ***IMPORTANT NOTE***
 
-There are two program, one is deployed on **mainnet** which is the Actions contract responsible for water, light, music
+There are two program, one is deployed on <ins>**mainnet**</ins> which is the Actions contract responsible for water, light, music
 
-Second program for facilitating NFT token transfer is on **testnet**.
+Second program for facilitating NFT token transfer is on <ins>**testnet**.</ins>
 
 ---
 
